@@ -8,7 +8,16 @@ void processInput(GLFWwindow* window)
         glfwSetWindowShouldClose(window, true);
 }    
 
-void VerticesBind(float* verts)
+void DrawTriangle(float* verts, unsigned int Size, unsigned int VBO)
+{
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, Size, verts, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glEnableVertexAttribArray(0);
+}
+
+void InitShaderProgram()
 {
 
 }
@@ -93,41 +102,39 @@ int main()
     //bind vertices to VBO buffer
     unsigned int VBO;
     glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     //initialization    VAO
     unsigned int VAO;
     glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
 
 
     // ..:: Initialization code (done once (unless your object frequently changes)) :: ..
     // 1. bind Vertex Array Object
-    glBindVertexArray(VAO);
     // 2. copy our vertices array in a buffer for OpenGL to use
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    // 3. then set our vertex attributes pointers
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
+    //glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    //glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    //// 3. then set our vertex attributes pointers
+    //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    //glEnableVertexAttribArray(0);
 
     /////////////////////////Need function to bind vertices to VBO's yea
     //rectangle with EBO
 
-    unsigned int indices[] = 
-    {  // note that we start from 0!
-    0, 1, 3,   // first triangle
-    1, 2, 3    // second triangle
-    };
+    //unsigned int indices[] = 
+    //{  // note that we start from 0!
+    //0, 1, 3,   // first triangle
+    //1, 2, 3    // second triangle
+    //};
 
-    unsigned int EBO;
-    glGenBuffers(1, &EBO);
+    //unsigned int EBO;
+    //glGenBuffers(1, &EBO);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    //glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
+    //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    //glEnableVertexAttribArray(0);
 
 
     //reder loop
@@ -140,14 +147,13 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT);
 
         glUseProgram(shaderProgram);
-        glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-        //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0); //draw rectangle
-        //glBindVertexArray(0);
+
+        DrawTriangle(vertices, sizeof(vertices), VBO);
+        DrawTriangle(vertices_second, sizeof(vertices_second), VBO);
+
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
-
 
 
     glfwTerminate();
