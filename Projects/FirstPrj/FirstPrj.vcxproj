@@ -80,8 +80,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\OPENGL\includes;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\OPENGL\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\CPP\OPENGL\includes;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\CPP\OPENGL\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
