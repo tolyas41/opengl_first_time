@@ -1,6 +1,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include "Shader.h"
 
 void processInput(GLFWwindow* window)
 {
@@ -12,9 +13,11 @@ void DrawTriangle(float* verts, unsigned int Size, unsigned int VBO)
 {
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, Size, verts, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
 void InitShaderProgram()
@@ -35,20 +38,21 @@ void ChangeColor(float Value, unsigned int shaderProgram)
 const char* vertexShaderSource =
 "#version 330 core\n"
 "layout (location = 0) in vec3 aPos;\n"
-"out vec4 vertexColor;\n"
+"layout (location = 1) in vec3 aColor;\n"
+"out vec3 ourColor;\n"
 "void main()\n"
 "{\n"
 "   gl_Position = vec4(aPos, 1.0);\n"
-"   vertexColor = vec4(0.5, 0.0, 0.0, 1.0);\n"
+"   ourColor = aColor;\n"
 "}\0";
 
 const char* fragmentShaderSource =
 "#version 330 core\n"
 "out vec4 FragColor;\n"
-"uniform vec4 ourColor;\n"
+"in vec3 ourColor;\n"
 "void main()\n"
 "{\n"
-"   FragColor = ourColor;\n"
+"   FragColor = vec4(ourColor, 1.0);\n"
 "}\0";
 
 
@@ -75,6 +79,8 @@ int main()
 
     glViewport(0, 0, 800, 600);
 
+    Shader CustomShaders("Shaders/shader.vs", "Shaders/shader.fs");
+
     unsigned int vertexShader;
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
     glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
@@ -98,9 +104,9 @@ int main()
 
 
     float vertices[] = {
-     0.0f,  0.5f, 0.0f,  
-    -0.7f, -0.7f, 0.0f,  
-    0.7f, -0.7f, 0.0f, 
+     0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,   // bottom right
+    -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,   // bottom left
+     0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f    // top     
     };
 
     float vertices_second[] =
@@ -159,7 +165,7 @@ int main()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        ChangeColor(0, shaderProgram);
+        //ChangeColor(0, shaderProgram);
 
         DrawTriangle(vertices, sizeof(vertices), VBO);
         //DrawTriangle(vertices_second, sizeof(vertices_second), VBO);
