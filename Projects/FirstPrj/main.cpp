@@ -5,10 +5,15 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-void processInput(GLFWwindow* window)
+void processInput(GLFWwindow* window, float& transparency)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
+
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+        transparency += 0.1;
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+        transparency -= 0.1;
 }    
 
 void DrawTriangle(float* verts, unsigned int Size, unsigned int VBO)
@@ -53,6 +58,12 @@ void DrawRectangle(float* verts, unsigned int* indices, unsigned int Size_verts,
 //}
 
 
+
+
+/// <summary>
+/// ////////////////////////////////////////////////
+/// </summary>
+/// <returns></returns>
 int main()
 {
     glfwInit();
@@ -110,7 +121,13 @@ int main()
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, texture2);
 
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     data = stbi_load("awesomeface.png", &width, &height, &nrChannels, 0);
+    //data = stbi_load("pepe.jpg", &width, &height, &nrChannels, 0);  //not working (?)
     if (data)
     {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
@@ -140,12 +157,15 @@ int main()
 
     glBindVertexArray(VAO);
 
+
+    float transparency = 0.0f;
     while (!glfwWindowShouldClose(window))
     {
         CustomShaders.use();
         CustomShaders.setInt("texture1", 0);      
         CustomShaders.setInt("texture2", 1);       
-        processInput(window);
+        CustomShaders.setFloat("transparency", transparency);
+        processInput(window, transparency);
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);

@@ -1,2 +1,4 @@
 ﻿  main.cpp
+C:\CPP\OPENGL\Projects\FirstPrj\main.cpp(14,28): warning C4305: '+=': truncation from 'double' to 'float'
+C:\CPP\OPENGL\Projects\FirstPrj\main.cpp(16,28): warning C4305: '-=': truncation from 'double' to 'float'
   FirstPrj.vcxproj -> C:\CPP\OPENGL\Projects\FirstPrj\x64\Debug\FirstPrj.exe
