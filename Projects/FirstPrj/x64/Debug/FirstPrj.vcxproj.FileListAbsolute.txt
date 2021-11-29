@@ -1,2 +1,3 @@
 C:\OPENGL\Projects\FirstPrj\x64\Debug\FirstPrj.exe
 C:\CPP\OPENGL\Projects\FirstPrj\x64\Debug\FirstPrj.exe
+M:\OPENGL\opengl_first_time\Projects\FirstPrj\x64\Debug\FirstPrj.exe

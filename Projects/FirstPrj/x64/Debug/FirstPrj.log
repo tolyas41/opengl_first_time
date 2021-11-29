@@ -1,4 +1,4 @@
 ﻿  main.cpp
-C:\CPP\OPENGL\Projects\FirstPrj\main.cpp(14,28): warning C4305: '+=': truncation from 'double' to 'float'
-C:\CPP\OPENGL\Projects\FirstPrj\main.cpp(16,28): warning C4305: '-=': truncation from 'double' to 'float'
-  FirstPrj.vcxproj -> C:\CPP\OPENGL\Projects\FirstPrj\x64\Debug\FirstPrj.exe
+M:\OPENGL\opengl_first_time\Projects\FirstPrj\main.cpp(17,28): warning C4305: '+=': truncation from 'double' to 'float'
+M:\OPENGL\opengl_first_time\Projects\FirstPrj\main.cpp(19,28): warning C4305: '-=': truncation from 'double' to 'float'
+  FirstPrj.vcxproj -> M:\OPENGL\opengl_first_time\Projects\FirstPrj\x64\Debug\FirstPrj.exe

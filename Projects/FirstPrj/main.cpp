@@ -4,6 +4,9 @@
 #include "Shader.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 void processInput(GLFWwindow* window, float& transparency)
 {
@@ -44,26 +47,9 @@ void DrawRectangle(float* verts, unsigned int* indices, unsigned int Size_verts,
     // texture coord attribute
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
     glEnableVertexAttribArray(2);
-
 }
 
 
-//void ChangeColor(float Value, unsigned int shaderProgram)
-//{
-//    float timeValue = glfwGetTime();
-//    float greenValue = (sin(timeValue) / 2.0f) + Value;
-//    int vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
-//    //glUseProgram(shaderProgram);
-//    glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
-//}
-
-
-
-
-/// <summary>
-/// ////////////////////////////////////////////////
-/// </summary>
-/// <returns></returns>
 int main()
 {
     glfwInit();
@@ -158,10 +144,18 @@ int main()
     glBindVertexArray(VAO);
 
 
+
     float transparency = 0.0f;
     while (!glfwWindowShouldClose(window))
     {
+        glm::mat4 transform = glm::mat4(1.0f);
+        transform = glm::rotate(transform, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+        transform = glm::translate(transform, glm::vec3(-0.5f, 0.5f, 0.0f));
+        transform = glm::scale(transform, glm::vec3(0.5, -0.5, 0.5));
         CustomShaders.use();
+        unsigned int transformLoc = glGetUniformLocation(CustomShaders.ID, "transform");
+        glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
+
         CustomShaders.setInt("texture1", 0);      
         CustomShaders.setInt("texture2", 1);       
         CustomShaders.setFloat("transparency", transparency);
