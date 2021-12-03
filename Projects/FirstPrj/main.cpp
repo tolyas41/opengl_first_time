@@ -95,7 +95,6 @@ int main()
     glm::mat4 view = glm::mat4(1.0f);
     view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
     glm::mat4 projection;
-    projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 
     glm::vec3 cubePositions[] = 
     {
@@ -117,7 +116,8 @@ int main()
 
     //CustomShaders.setInt("texture1", 0);      
     //CustomShaders.setInt("texture2", 1);  
-
+    float FovChanging = 60.0f;
+    bool isFovIncrementing = true;
     while (!glfwWindowShouldClose(window))
     {
         processInput(window, transparency);
@@ -127,7 +127,6 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         CustomShaders.setMat4("view", view);
-        CustomShaders.setMat4("projection", projection);
 
         glBindVertexArray(VAO);
         for (unsigned int i = 1; i < 11; i++)
@@ -140,6 +139,26 @@ int main()
 
             glDrawArrays(GL_TRIANGLES, 0, 36);
         }
+
+        if (FovChanging < 80.0f && isFovIncrementing)
+        {
+            FovChanging += 0.01f;
+        }
+        else if (isFovIncrementing)
+        {
+            isFovIncrementing = false;
+        }
+        if (FovChanging > 50.0f && !isFovIncrementing)
+        {
+            FovChanging -= 0.01f;
+        }
+        else if (!isFovIncrementing)
+        {
+            isFovIncrementing = true;
+        }
+
+        projection = glm::perspective(glm::radians(FovChanging), 800.0f / 600.0f, 0.1f, 100.0f);
+        CustomShaders.setMat4("projection", projection);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
