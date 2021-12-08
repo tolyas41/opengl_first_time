@@ -147,7 +147,6 @@
   <ItemGroup>
     <ClCompile Include="..\..\includes\glad.c" />
     <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Geometry.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Window.cpp" />
