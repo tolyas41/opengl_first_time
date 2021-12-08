@@ -1,34 +1,17 @@
 #include "Camera.h"
-#include <functional>
 
-//void Camera::mouse_callback(GLFWwindow* window, double xpos, double ypos);
-//void Camera::scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+float Camera::fov = 60.0f;
+glm::vec3 Camera::cameraPos = glm::vec3(0.0f, 0.0f, 5.0f);
+glm::vec3 Camera::cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+glm::vec3 Camera::cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+bool Camera::firstMouse = true;
 
-void Camera::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
-{
-    fov -= (float)yoffset;
-    if (fov < 1.0f)
-        fov = 1.0f;
-    if (fov > 60.0f)
-        fov = 60.0f;
-}
-
-Camera::Camera(GLFWwindow* currentWindow)
-    : window { currentWindow }
-{
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    glfwSetCursorPosCallback(window, [](GLFWwindow* window, double x, double y)
-    {
-        if (Camera* somecamera = static_cast<Camera*>(glfwGetWindowUserPointer(window)))
-            somecamera->mouse_callback(window, x, y);
-    });
-    glfwSetScrollCallback(window, [](GLFWwindow* window, double x, double y)
-    {
-        if (Camera* somecamera = static_cast<Camera*>(glfwGetWindowUserPointer(window)))
-            somecamera->scroll_callback(window, x, y);
-    });
-
-}
+float Camera::lastX = 400.0f;
+float Camera::lastY = 300.0f;
+float Camera::sensitivity = 0.1f;
+float Camera::yaw = -90.0f;
+float Camera::pitch = 0.0f;
+float Camera::cameraMoveVal = 2.5f;
 
 void Camera::mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
@@ -38,12 +21,16 @@ void Camera::mouse_callback(GLFWwindow* window, double xpos, double ypos)
         lastY = ypos;
         firstMouse = false;
     }
-
+    float xoffset = xpos - lastX;
+    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
     lastX = xpos;
     lastY = ypos;
 
-    yaw += (xpos - lastX) * sensitivity;
-    pitch += (lastY - ypos) * sensitivity;
+    xoffset *= sensitivity;
+    yoffset *= sensitivity;
+
+    yaw += xoffset;
+    pitch += yoffset;
 
     if (pitch > 89.0f)
         pitch = 89.0f;
@@ -55,13 +42,20 @@ void Camera::mouse_callback(GLFWwindow* window, double xpos, double ypos)
     direction.y = sin(glm::radians(pitch));
     direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
     cameraFront = glm::normalize(direction);
-
 }
 
-
-void Camera::cameraMovement(float deltaTime)
+void Camera::scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    const float cameraSpeed = cameraMoveVal * deltaTime; 
+    fov -= (float)yoffset;
+    if (fov < 1.0f)
+        fov = 1.0f;
+    if (fov > 60.0f)
+        fov = 60.0f;
+}
+
+void Camera::cameraMovement(float deltaTime, GLFWwindow* window)
+{
+    const float cameraSpeed = cameraMoveVal * deltaTime;
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         cameraPos += cameraSpeed * cameraFront;
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)

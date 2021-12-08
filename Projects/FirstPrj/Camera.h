@@ -8,30 +8,29 @@
 
 class Camera
 {
+private:
+    Camera() {}
 public:
 
-	Camera(GLFWwindow* currentWindow);
+	static float fov;
 
-	float fov = 60.0f;
+	static glm::vec3 cameraPos;
+	static glm::vec3 cameraFront;
+	static glm::vec3 cameraUp;
 
-	glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-	glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-	glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+	static glm::mat4 getLookAt();
+	static void cameraMovement(float deltaTime, GLFWwindow* window);
+	static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+	static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
-	glm::mat4 getLookAt();
-	void cameraMovement(float deltaTime);
+	static bool firstMouse;
 
-private:
-	GLFWwindow* window;
-	float lastX = 400, lastY = 300;
-	bool firstMouse = true;
-	const float sensitivity = 0.1f;
-	float yaw = -90.0f;
-	float pitch = 0.0f;
-	const float cameraMoveVal = 3.0f;
+	static float lastX, lastY;
+	static float sensitivity;
+	static float yaw;
+	static float pitch;
+	static float cameraMoveVal;
 
-	void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-	void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 };
 
